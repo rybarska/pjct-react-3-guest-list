@@ -89,22 +89,22 @@ export default function App() {
             }
           />
         </label>
-        <br />
-        <br />
-        <label>
-          Attending
-          <input
-            aria-label="attending"
-            type="checkbox"
-            // 2. Use state variable (connect it to the input)
-            checked={isAttending}
-            // 3. Update the state variable when the user types something
-            onChange={(event) => {
-              setIsAttending(event.currentTarget.checked);
-            }}
-          />
-        </label>
       </form>
+      <br />
+      <br />
+      <label>
+        Attending
+        <input
+          aria-label="attending"
+          type="checkbox"
+          // 2. Use state variable (connect it to the input)
+          checked={isAttending}
+          // 3. Update the state variable when the user types something
+          onChange={(event) => {
+            setIsAttending(event.currentTarget.checked);
+          }}
+        />
+      </label>
     </div>
   );
 }
