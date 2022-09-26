@@ -4,17 +4,31 @@ export default function App() {
   const [firstName, setFirstName] = useState([]);
   const [lastName, setLastName] = useState([]);
   const [attending, setAttending] = useState(false);
+  //const [singleGuest, setSingleGuest] = useState([]);
   const [allGuests, setAllGuests] = useState([]);
-  const [singleGuest, setSingleGuest] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = true;
 
   const baseUrl = 'https://b900ebe2-7e93-4ee3-b8d0-d70709118615.id.repl.co';
 
+  /* useEffect(() => {
+    async function getSingleGuest() {
+      const response = await fetch(`${baseUrl}/guests/:id`);
+      const data = await response.json();
+      setSingleGuest(data);
+    }
+    if (singleGuest) {
+      setIsLoading(false);
+    }
+    getSingleGuest();
+  }, [singleGuest]); */
+
   useEffect(() => {
-    async function getAllGuests(props) {
+    async function getAllGuests() {
       const response = await fetch(`${baseUrl}/guests`);
       const data = await response.json();
       setAllGuests(data);
+    }
+    if (allGuests) {
       setIsLoading(false);
     }
     getAllGuests();
@@ -31,38 +45,23 @@ export default function App() {
     const createdGuest = await response.json();
   }
 
-  async function deleteGuest(id) {
-    const response = await fetch(`${baseUrl}/guests/${id}`, {
-      method: 'DELETE',
-    });
-    const deletedGuest = await response.json();
-    const filteredGuestsList = allGuests.filter(id !== deletedGuest.id);
-    setAllGuests(filteredGuestsList);
-    deleteGuest();
-  }
-
-  {
-    /* useEffect(() => {
-    async function getSingleGuest(id) {
-      const response = await fetch(`${baseUrl}/guests/${id}`);
-      const guest = await response.json();
-      setSingleGuest(guest);
-    }
-    getSingleGuest();
-  }, [singleGuest]); */
-  }
-
-  async function updateGuest(id) {
-    const response = await fetch(`${baseUrl}/guests/${id}`, {
+  async function updateGuest() {
+    const response = await fetch(`${baseUrl}/guests/1`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ attending: true }),
+      body: JSON.stringify({ attending: attending }),
     });
-    updateGuest();
     const updatedGuest = await response.json();
   }
+
+  async function deleteGuest() {
+    const response = await fetch(`${baseUrl}/guests/1`, { method: 'DELETE' });
+    const deletedGuest = await response.json();
+  }
+
+  // if (isLoading) return <>is Loading...</>;
 
   return (
     <div data-test-id="guest">
@@ -83,6 +82,7 @@ export default function App() {
           />
         </label>
         <br />
+        <br />
         <label>
           Last name
           <input
@@ -100,41 +100,32 @@ export default function App() {
       </form>
       <br />
       <br />
-      <br />
-      <div>
-        <h5>Registered guests:</h5>
+      <h1>Registered guests:</h1>
 
-        {allGuests.map((props) => {
-          return (
-            <div key={`guest-${props.id}`}>
-              {props.id} {props.firstName} {props.lastName} {props.attending}
-              <button
-                aria-label="Remove <first name> <last name>"
-                onClick={() => {
-                  deleteGuest(props.id);
-                }}
-              >
-                Remove
-              </button>
-              <label>
-                Attending
-                <input
-                  aria-label="attending"
-                  type="checkbox"
-                  // 2. Use state variable (connect it to the input)
-                  checked={attending}
-                  // 3. Update the state variable when the user types something
-                  onChange={(event) => {
-                    setAttending(event.currentTarget.checked);
-                    updateGuest(props.id);
-                  }}
-                />
-              </label>
-            </div>
-          );
-        })}
-      </div>
       <br />
+      <br />
+      <label>
+        Attending
+        <input
+          aria-label="attending"
+          type="checkbox"
+          // 2. Use state variable (connect it to the input)
+          checked={attending}
+          // 3. Update the state variable when the user types something
+          onChange={(event) => {
+            setAttending(event.currentTarget.checked);
+            updateGuest();
+          }}
+        />
+      </label>
+      {/* <button onClick=>{async()=>{
+
+        const newGuest = await getAllGuests();
+      }
+      >Remove<button/>*/}
+      {/* <button aria-label="Remove <first name> <last name>"onClick={{
+         deleteGuest();
+        }}>Remove</button> */}
     </div>
   );
 }
