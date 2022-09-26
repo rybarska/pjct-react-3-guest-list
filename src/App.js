@@ -6,6 +6,7 @@ export default function App() {
   const [attending, setAttending] = useState(false);
   const [allGuests, setAllGuests] = useState([]);
   const [singleGuest, setSingleGuest] = useState([]);
+  const [updatedGuest, setUpdatedGuest] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const baseUrl = 'https://b900ebe2-7e93-4ee3-b8d0-d70709118615.id.repl.co';
@@ -60,8 +61,11 @@ export default function App() {
       },
       body: JSON.stringify({ attending: true }),
     });
+    const guest = await response.json();
+    setUpdatedGuest(guest);
+    updatedGuest.attending = attending;
+    return updatedGuest;
     updateGuest();
-    const updatedGuest = await response.json();
   }
 
   return (
@@ -117,18 +121,18 @@ export default function App() {
                 Remove
               </button>
               <label>
-                Attending
                 <input
                   aria-label="attending"
                   type="checkbox"
                   // 2. Use state variable (connect it to the input)
-                  checked={attending}
+                  checked={props.attending}
                   // 3. Update the state variable when the user types something
                   onChange={(event) => {
-                    setAttending(event.currentTarget.checked);
+                    // setAttending(event.currentTarget.checked);
                     updateGuest(props.id);
                   }}
                 />
+                Attending
               </label>
             </div>
           );
